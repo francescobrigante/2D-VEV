@@ -1,0 +1,49 @@
+warning: never claim + accept labels requires -a flag to fully verify
+pan: ltl formula reach_goal
+
+(Spin Version 6.5.2 -- 6 December 2019)
+	+ Partial Order Reduction
+
+Full statespace search for:
+	never claim         	+ (reach_goal)
+	assertion violations	+ (if within scope of claim)
+	acceptance   cycles 	- (not selected)
+	invalid end states	- (disabled by never claim)
+
+State-vector 4968 byte, depth reached 48894, errors: 0
+    23775 states, stored
+        0 states, matched
+    23775 transitions (= stored+matched)
+     1346 atomic steps
+hash conflicts:         0 (resolved)
+
+Stats on memory usage (in Megabytes):
+  113.277	equivalent memory usage for states (stored*(State-vector + overhead))
+  111.883	actual memory usage for states (compression: 98.77%)
+         	state-vector as stored = 4906 byte + 28 byte overhead
+  128.000	memory used for hash table (-w24)
+    5.341	memory used for DFS stack (-m100000)
+  244.444	total actual memory usage
+
+
+unreached in proctype Robot
+	main.pml:140, state 71, "move_choice = 4"
+	main.pml:151, state 94, "col = (col-1)"
+	main.pml:151, state 95, "last_move = 4"
+	main.pml:152, state 97, "printf('No valid moves, robot stuck\n')"
+	main.pml:157, state 103, "has_a = 1"
+	main.pml:157, state 104, "printf('Collected key a\n')"
+	main.pml:158, state 110, "has_b = 1"
+	main.pml:158, state 111, "printf('Collected key b\n')"
+	main.pml:159, state 117, "has_c = 1"
+	main.pml:159, state 118, "printf('Collected key c\n')"
+	main.pml:163, state 127, "-end-"
+	(11 of 127 states)
+unreached in init
+	(0 of 1265 states)
+unreached in claim reach_goal
+	_spin_nvr.tmp:99, state 6, "-end-"
+	(1 of 6 states)
+
+pan: elapsed time 0.42 seconds
+pan: rate 56607.143 states/second
