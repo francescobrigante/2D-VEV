@@ -1,9 +1,3 @@
-/***********************
-  * Virtual Environment Validator (1-D array version) - ROW/COL VERSION
-  * Symbols:
-  *  # wall, @ free, S start, G goal
-  *  a,b,c keys <-> A,B,C doors
-  ***********************/
 #define W 35
 #define H 35
 #define N_CELLS (W*H)
@@ -11,18 +5,12 @@
 
 /* Flattened environments */
 byte env1[N_CELLS]; /* Correct */
-byte env2[N_CELLS]; /* Unreachable Goal: walls */
-byte env3[N_CELLS]; /* Unreachable Goal: key 'a' unreachable */
 byte env[N_CELLS];  /* active environment */
 
 /* Conversione 2D -> 1D */
 #define IDX(row,col) ((row)*W + (col))
 #define CELL(row,col) env[IDX(row,col)]
 
-/* Macro per riempire una riga (row R) dell'ambiente E */
-// #define SET_ROW(E,R,c0,c1,c2,c3,c4,c5,c6) \
-//   E[IDX(R,0)]=c0; E[IDX(R,1)]=c1; E[IDX(R,2)]=c2; \
-//   E[IDX(R,3)]=c3; E[IDX(R,4)]=c4; E[IDX(R,5)]=c5; E[IDX(R,6)]=c6
 
 #define SET_ROW(E,R, c0,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,c25,c26,c27,c28,c29,c30,c31,c32,c33,c34) \
   E[IDX(R,0)] = c0;   E[IDX(R,1)] = c1;   E[IDX(R,2)] = c2;   E[IDX(R,3)] = c3;   E[IDX(R,4)] = c4; \
@@ -51,19 +39,19 @@ byte last_move=0;
 #define AT_DOOR_B (CELL(row,col)=='B')
 #define AT_DOOR_C (CELL(row,col)=='C')
 
-/* Controllo se la cella è attraversabile */
+
 #define PASSABLE(r,c) (CELL(r,c)!='#' && \
                       (CELL(r,c)!='A' || has_a) && \
                       (CELL(r,c)!='B' || has_b) && \
                       (CELL(r,c)!='C' || has_c))
 
-/* Processo Robot */
+
 proctype Robot() {
     int steps = 0;
-    short visited[N_CELLS]; // matrice visitata 1D
+    short visited[N_CELLS]; 
     byte r, c;
 
-    // Inizializza visited a 0
+
     r = 0;
     do
     :: r < H ->
@@ -76,7 +64,7 @@ proctype Robot() {
     :: else -> break
     od;
 
-    // Aspetta posizione di start
+
     (row != 0 || col != 0 || CELL(row,col) == 'S');
     printf("Robot starts at (%d,%d), cell='%c'\n", row, col, CELL(row,col));
     assert(!AT_WALL);
@@ -95,14 +83,12 @@ proctype Robot() {
         printf("Step %d: at (%d,%d), cell='%c'\n", steps, row, col, CELL(row,col));
         visited[IDX(row,col)] = visited[IDX(row,col)] + 1;
 
-        // Trova direzione meno visitata
         byte min_visit = 255;
         byte move_choice = 0;
 
         // Nord
         if
         :: (row>0 && PASSABLE(row-1,col)) ->
-      //   :: (row>0 && PASSABLE(row-1,col) && last_move != 2) ->
             if
             :: visited[IDX(row-1,col)] < min_visit -> min_visit = visited[IDX(row-1,col)]; move_choice = 1
             :: else -> skip
@@ -113,7 +99,6 @@ proctype Robot() {
         // Sud
         if
         :: (row<H-1 && PASSABLE(row+1,col)) ->
-      //   :: (row<H-1 && PASSABLE(row+1,col) && last_move != 1) ->
             if
             :: visited[IDX(row+1,col)] < min_visit -> min_visit = visited[IDX(row+1,col)]; move_choice = 2
             :: else -> skip
@@ -124,7 +109,6 @@ proctype Robot() {
         // Est
         if
         :: (col<W-1 && PASSABLE(row,col+1)) ->
-      //   :: (col<W-1 && PASSABLE(row,col+1) && last_move != 4) ->
             if
             :: visited[IDX(row,col+1)] < min_visit -> min_visit = visited[IDX(row,col+1)]; move_choice = 3
             :: else -> skip
@@ -135,7 +119,6 @@ proctype Robot() {
         // Ovest
         if
         :: (col>0 && PASSABLE(row,col-1)) ->
-      //   :: (col>0 && PASSABLE(row,col-1) && last_move != 3) ->
             if
             :: visited[IDX(row,col-1)] < min_visit -> min_visit = visited[IDX(row,col-1)]; move_choice = 4
             :: else -> skip
@@ -143,7 +126,6 @@ proctype Robot() {
         :: else -> skip
         fi;
 
-        // Esegui mossa scelta
         if
         :: move_choice==1 -> printf("Chose North\n"); row = row-1; last_move = 1
         :: move_choice==2 -> printf("Chose South\n"); row = row+1; last_move = 2
@@ -164,7 +146,6 @@ proctype Robot() {
 
 
 
-/* Scelta ambiente */
 #if SELECT_ENV==1
 #define SRC env1
 #elif SELECT_ENV==2
@@ -214,14 +195,14 @@ init {
    SET_ROW(env1,34,'@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@','@');
 
   atomic {
-    /* Copia ambiente scelto */
+
     short k=0;
     do
     :: k < N_CELLS -> env[k]=SRC[k]; k++
     :: else -> break
     od;
 
-    /* Trova posizione start */
+
     byte found=0; byte r=0; byte c=0;
     do
     :: (r<H && found==0) ->
