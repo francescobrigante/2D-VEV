@@ -1,0 +1,7 @@
+{
+  "algorithm": "PPO",
+  "total_timesteps": 100000,
+  "training_environments": 100,
+  "trained_at": "20250922_235427",
+  "model_name": "verified"
+}
